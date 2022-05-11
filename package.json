@@ -2,14 +2,21 @@
   "name": "dump-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/main.ts",
   "scripts": {
+    "dev": "DEBUG=app:* ts-node-dev --files src/main.ts",
     "format:check": "prettier src/",
     "format:fix": "prettier --write src/"
   },
   "author": "Sajad Torkamani <sajadtorkamani1@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "prettier": "^2.6.2"
+    "@types/express": "^4.17.13",
+    "prettier": "^2.6.2",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "express": "^4.18.1"
   }
 }
