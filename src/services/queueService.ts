@@ -9,19 +9,18 @@ const connection: ConnectionOptions = {
   port: process.env.REDIS_PORT,
 }
 
-class RedisService {
+class QueueService {
   public emailQueue: Queue
 
   constructor() {
     this.emailQueue = new Queue('Emails', { connection })
-    // debug(`Created queue:`)
   }
 
-  async createConnection() {
-    this.createEmailWorker()
+  async createWorkers() {
+    this.createEmailDeliveryWorker()
   }
 
-  createEmailWorker() {
+  createEmailDeliveryWorker() {
     const worker = new Worker<SendEmailOptions, SentMessageInfo>(
       this.emailQueue.name,
       (job) => mailerService.deliverEmail(job.data),
@@ -44,6 +43,6 @@ class RedisService {
   }
 }
 
-const redisService = new RedisService()
+const queueService = new QueueService()
 
-export default redisService
+export default queueService

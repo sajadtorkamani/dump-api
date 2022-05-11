@@ -18,7 +18,6 @@ class UserService {
   }
 
   async sendConfirmEmailInstructions(user: HydratedDocument<IUser>) {
-    console.log('Sending confirmation email to', user.email)
     await mailerService.sendEmail({
       to: user.email,
       subject: 'Welcome',

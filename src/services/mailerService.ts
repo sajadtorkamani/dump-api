@@ -2,7 +2,7 @@ import * as path from 'path'
 import fs from 'fs/promises'
 import * as nodemailer from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
-import redisService from './redisService'
+import queueService from './queueService'
 
 export interface SendEmailOptions {
   to: string
@@ -39,7 +39,7 @@ class MailerService {
   // Schedule email as a queue job.
   async sendEmail(options: SendEmailOptions) {
     const jobName = options.template.split('.')[0]
-    await redisService.emailQueue.add(jobName, options)
+    await queueService.emailQueue.add(jobName, options)
   }
 
   async deliverEmail(
@@ -58,14 +58,14 @@ class MailerService {
 
   async compileTemplate(
     template: string,
-    variables: TemplateVariables = {}
+    templateVariables: TemplateVariables = {}
   ): Promise<string> {
     const templatePath = path.join(process.cwd(), 'src', 'emails', template)
 
     let html = await fs.readFile(templatePath, 'utf8')
 
     // Substitute variable placeholders in template
-    Object.entries(variables).map(([variableName, variableValue]) => {
+    Object.entries(templateVariables).map(([variableName, variableValue]) => {
       html = html.replace(
         new RegExp(`{{ ${variableName} }}`, 'g'),
         variableValue
