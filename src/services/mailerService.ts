@@ -2,8 +2,9 @@ import * as path from 'path'
 import fs from 'fs/promises'
 import * as nodemailer from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
+import redisService from './redisService'
 
-interface SendEmailOptions {
+export interface SendEmailOptions {
   to: string
   subject: string
   template: string
@@ -38,7 +39,7 @@ class MailerService {
   // Schedule email as a queue job.
   async sendEmail(options: SendEmailOptions) {
     const jobName = options.template.split('.')[0]
-    await EmailQueue.add(jobName, options)
+    await redisService.emailQueue.add(jobName, options)
   }
 
   async deliverEmail(

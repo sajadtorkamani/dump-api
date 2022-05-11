@@ -1,14 +1,14 @@
 const debug = require('debug')('app:main')
 import app from './app'
-import mongoose from 'mongoose'
-
-const PORT = process.env.PORT || 8000
+import mongoService from './services/mongoService'
+import redisService from './services/redisService'
 
 async function main() {
-  await mongoose.connect('mongodb://localhost:27017/dump')
+  await mongoService.createConnection()
+  await redisService.createConnection()
 
-  app.listen(PORT, () => {
-    debug(`App listening on http://localhost:${PORT}`)
+  app.listen(process.env.PORT, () => {
+    debug(`App listening on http://localhost:${process.env.PORT}`)
   })
 }
 
