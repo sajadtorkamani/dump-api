@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express'
 import * as yup from 'yup'
+import userService from '../../services/userService'
 import { RegisterRequest } from '../../types/requests'
 import { makeAsync, validateOrFail } from '../../utilities'
 
@@ -16,7 +17,7 @@ const validate: RequestHandler = async (req, res, next) => {
 }
 
 const execute: RequestHandler = async (req, res) => {
-  // const registerDto = req.body as RegisterDto
+  await userService.createUser(req.body)
   // const user = await createUser(registerDto)
   // await sendWelcomeEmail(user)
 

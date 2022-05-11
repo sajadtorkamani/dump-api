@@ -1,3 +1,4 @@
+import mysql from 'mysql2/promise'
 import * as yup from 'yup'
 import { ValidationError } from './errors/ValidationError'
 import { ValidationErrors } from './types/misc'
@@ -21,9 +22,9 @@ export async function validateOrFail(
   }
 }
 
-const formatYupValidationErrors = (
+export function formatYupValidationErrors(
   errors: yup.ValidationError[]
-): ValidationErrors => {
+): ValidationErrors {
   const formattedErrors: ValidationErrors = {}
 
   errors.forEach((err) => {
@@ -32,4 +33,13 @@ const formatYupValidationErrors = (
   })
 
   return formattedErrors
+}
+
+export async function connectToDatabase() {
+  return await mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+  })
 }
