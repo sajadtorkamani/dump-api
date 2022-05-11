@@ -1,4 +1,3 @@
-import mysql from 'mysql2/promise'
 import * as yup from 'yup'
 import { ValidationError } from './errors/ValidationError'
 import { ValidationErrors } from './types/misc'
@@ -33,13 +32,4 @@ export function formatYupValidationErrors(
   })
 
   return formattedErrors
-}
-
-export async function connectToDatabase() {
-  return await mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-  })
 }

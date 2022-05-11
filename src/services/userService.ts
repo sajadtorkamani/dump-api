@@ -1,11 +1,22 @@
+import app from '../app'
+import User from '../models/User'
 import { RegisterRequest } from '../types/requests'
 
 class UserService {
   async createUser(request: RegisterRequest) {
-    
-    console.log('Creating a user', request)
+    const { email, password } = request
 
-    const sql = `INSERT INTO `
+    const user = new User({
+      email,
+      password,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
+    await user.save()
+
+    console.log({ user })
+
+    return user
   }
 }
 
