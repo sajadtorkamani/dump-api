@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+DEBUG=app:* ts-node --project ./bin/tsconfig-repl.json -r dotenv/config -r ./bin/repl.ts

@@ -1,22 +1,30 @@
+import { HydratedDocument } from 'mongoose'
 import app from '../app'
-import User from '../models/User'
+import User, { IUser } from '../models/User'
 import { RegisterRequest } from '../types/requests'
+import mailerService from './mailerService'
 
 class UserService {
-  async createUser(request: RegisterRequest) {
+  async createUser(request: RegisterRequest): Promise<HydratedDocument<IUser>> {
     const { email, password } = request
+    const user = new User({ email, password })
 
-    const user = new User({
-      email,
-      password,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+    return await user.save()
+  }
+
+  async isEmailAvailable(email: string): Promise<boolean> {
+    const user = await User.findOne({ email })
+    return user === null
+  }
+
+  async sendConfirmEmailInstructions(user: HydratedDocument<IUser>) {
+    console.log('Sending confirmation email to', user.email)
+    await mailerService.sendEmail({
+      to: user.email,
+      subject: 'Welcome',
+      template: 'welcome.html',
+      templateVariables: { email: user.email },
     })
-    await user.save()
-
-    console.log({ user })
-
-    return user
   }
 }
 
