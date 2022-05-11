@@ -1,0 +1,15 @@
+{
+  "name": "dump-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "format:check": "prettier src/",
+    "format:fix": "prettier --write src/"
+  },
+  "author": "Sajad Torkamani <sajadtorkamani1@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^2.6.2"
+  }
+}
