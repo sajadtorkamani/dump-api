@@ -24,10 +24,6 @@ const execute: RequestHandler = async (req, res) => {
   const user = await userService.createUser(req.body)
   await userService.sendConfirmEmailInstructions(user)
 
-  // return res.status(StatusCodes.CREATED).json({
-  //   token: await generateJwt(user),
-  //   payload: generatePayload(user),
-  // })
   res.status(StatusCodes.CREATED).json(user)
 }
 

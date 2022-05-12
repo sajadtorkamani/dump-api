@@ -27,6 +27,19 @@ class UserService {
       templateVariables: { email: user.email, confirmEmailUrl },
     })
   }
+
+  async confirmUserEmail(confirmEmailToken: string): Promise<boolean> {
+    const user = await User.findOne({ confirmEmailToken })
+    if (!user) {
+      return false
+    }
+
+    user.hasConfirmedEmail = true
+    user.confirmEmailToken = null
+    user.save()
+
+    return true
+  }
 }
 
 const userService = new UserService()

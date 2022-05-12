@@ -7,7 +7,7 @@ export interface IUser {
   password: string
   createdAt: number
   updatedAt: number
-  confirmEmailToken: string
+  confirmEmailToken: string | null
   hasConfirmedEmail: boolean
 }
 
