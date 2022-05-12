@@ -1,7 +1,8 @@
 import { HydratedDocument } from 'mongoose'
+import * as bcrypt from 'bcrypt'
 import app from '../app'
 import User, { IUser } from '../models/User'
-import { RegisterRequest } from '../types/requests'
+import { LoginRequest, RegisterRequest } from '../types/requests'
 import mailerService from './mailerService'
 
 class UserService {
@@ -39,6 +40,19 @@ class UserService {
     user.save()
 
     return true
+  }
+
+  async verifyCredentials(
+    email: string,
+    password: string
+  ): Promise<HydratedDocument<IUser> | null> {
+    const user = await User.findOne({ email })
+    if (!user) {
+      return null
+    }
+
+    const isValidCredentials = await bcrypt.compare(password, user.password)
+    return isValidCredentials ? user : null
   }
 }
 

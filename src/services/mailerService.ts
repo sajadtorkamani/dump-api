@@ -29,7 +29,7 @@ class MailerService {
 
   constructor() {
     this.transporter = this.createTransporter()
-    this.queue = new Queue('mails', { connection })
+    this.queue = new Queue('emails', { connection })
   }
 
   createTransporter(): Transporter {

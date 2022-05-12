@@ -6,7 +6,7 @@ import userService from '../../services/userService'
 import { RegisterRequest } from '../../types/requests'
 import { makeAsync, validateOrFail } from '../../utilities'
 
-const validate: RequestHandler = async (req, res, next) => {
+const validate: RequestHandler = async (req, _res, next) => {
   const schema: yup.SchemaOf<RegisterRequest> = yup.object().shape({
     email: yup
       .string()
