@@ -18,7 +18,7 @@ class UserService {
   }
 
   async sendConfirmEmailInstructions(user: HydratedDocument<IUser>) {
-    await mailerService.sendEmail({
+    await mailerService.deliverLater({
       to: user.email,
       subject: 'Welcome',
       template: 'welcome.html',

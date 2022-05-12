@@ -1,9 +1,15 @@
 import * as path from 'path'
 import fs from 'fs/promises'
 import * as nodemailer from 'nodemailer'
-import SMTPTransport from 'nodemailer/lib/smtp-transport'
-import queueService from './queueService'
+import SMTPTransport, { SentMessageInfo } from 'nodemailer/lib/smtp-transport'
+import { ConnectionOptions, Queue, Worker } from 'bullmq'
 
+const debug = require('debug')('app:mailerService')
+
+const connection: ConnectionOptions = {
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT,
+}
 export interface SendEmailOptions {
   to: string
   subject: string
@@ -19,9 +25,11 @@ type Transporter = nodemailer.Transporter<SMTPTransport.SentMessageInfo>
 
 class MailerService {
   private transporter: Transporter
+  private queue: Queue
 
   constructor() {
     this.transporter = this.createTransporter()
+    this.queue = new Queue('mails')
   }
 
   createTransporter(): Transporter {
@@ -37,12 +45,14 @@ class MailerService {
   }
 
   // Schedule email as a queue job.
-  async sendEmail(options: SendEmailOptions) {
-    const jobName = options.template.split('.')[0]
-    await queueService.emailQueue.add(jobName, options)
+  async deliverLater(sendOptions: SendEmailOptions) {
+    const emailTemplate = sendOptions.template.split('.')[0]
+    const jobName = `${emailTemplate} email`
+
+    await this.queue.add(jobName, sendOptions)
   }
 
-  async deliverEmail(
+  async deliverNow(
     options: SendEmailOptions
   ): Promise<nodemailer.SentMessageInfo> {
     const { to, subject, template, templateVariables } = options
@@ -73,6 +83,28 @@ class MailerService {
     })
 
     return html
+  }
+
+  createQueueWorker() {
+    const worker = new Worker<SendEmailOptions, SentMessageInfo>(
+      this.queue.name,
+      (job) => this.deliverNow(job.data),
+      { connection }
+    )
+
+    worker.on('completed', (job) => {
+      debug(`JOB COMPLETED: ${job.name} #${job.id} (Queue: ${this.queue.name})`)
+    })
+
+    worker.on('error', (err) => {
+      debug(`JOB ERROR: ${err.message} (Queue: ${this.queue.name})
+      \t ${err.stack}`)
+    })
+
+    worker.on('failed', (job, err) => {
+      debug(`JOB FAILED: ${job.name} #${job.id} (Queue: ${this.queue.name}): 
+      ${err.message} \t ${err.stack}`)
+    })
   }
 }
 

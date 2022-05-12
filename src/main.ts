@@ -1,11 +1,12 @@
 const debug = require('debug')('app:main')
 import app from './app'
+import mailerService from './services/mailerService'
 import mongoService from './services/mongoService'
-import queueService from './services/queueService'
 
 async function main() {
   await mongoService.createConnection()
-  await queueService.createWorkers()
+
+  mailerService.createQueueWorker()
 
   app.listen(process.env.PORT, () => {
     debug(`App listening on http://localhost:${process.env.PORT}`)
