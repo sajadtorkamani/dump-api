@@ -1,8 +1,9 @@
 import * as yup from 'yup'
-import { ValidationError } from './errors/ValidationError'
-import { ValidationErrors } from './types/misc'
+import { v4 as uuidv4 } from 'uuid'
 import asyncHandler from 'express-async-handler'
 import { RequestHandler } from 'express'
+import { ValidationError } from './errors/ValidationError'
+import { ValidationErrors } from './types/misc'
 
 export function makeAsync(handlers: RequestHandler[]) {
   return handlers.map(asyncHandler)
@@ -32,4 +33,31 @@ export function formatYupValidationErrors(
   })
 
   return formattedErrors
+}
+
+export function uuid(): string {
+  return uuidv4()
+}
+
+export function ensureEnvVarsAreSet() {
+  const requiredKeys = [
+    'ADMIN_EMAIL',
+    'DOMAIN',
+    'MONGO_URI',
+    'REDIS_HOST',
+    'REDIS_PORT',
+    'SMTP_USERNAME',
+    'SMTP_PASSWORD',
+  ]
+
+  const missingKeys = requiredKeys.filter((key) => {
+    const envVar = process.env[key]
+    return typeof envVar === 'undefined' || envVar.trim() === ''
+  })
+
+  if (missingKeys.length > 0) {
+    throw new Error(
+      `Missing required environment variables: ${missingKeys.join(', ')}`
+    )
+  }
 }

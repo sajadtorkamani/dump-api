@@ -18,11 +18,13 @@ class UserService {
   }
 
   async sendConfirmEmailInstructions(user: HydratedDocument<IUser>) {
+    const confirmEmailUrl = `${process.env.DOMAIN}/accounts/confirm-email/${user.confirmEmailToken}`
+
     await mailerService.deliverLater({
       to: user.email,
       subject: 'Welcome',
       template: 'welcome.html',
-      templateVariables: { email: user.email },
+      templateVariables: { email: user.email, confirmEmailUrl },
     })
   }
 }

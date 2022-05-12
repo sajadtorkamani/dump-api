@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/main.ts",
   "scripts": {
-    "dev": "DEBUG=app:* ts-node-dev -r dotenv/config --files src/main.ts",
+    "start:dev": "DEBUG=app:* ts-node-dev -r dotenv/config --files src/main.ts",
     "console": "DEBUG=app:* ts-node -r dotenv/config",
     "format:check": "prettier src/",
     "format:fix": "prettier --write src/"
@@ -15,6 +15,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.13",
     "@types/nodemailer": "^6.4.4",
+    "@types/uuid": "^8.3.4",
     "@types/yup": "^0.29.13",
     "prettier": "^2.6.2",
     "ts-node-dev": "^1.1.8",
@@ -31,6 +32,7 @@
     "http-status-codes": "^2.2.0",
     "mongoose": "^6.3.3",
     "nodemailer": "^6.7.5",
+    "uuid": "^8.3.2",
     "yup": "^0.32.11"
   }
 }

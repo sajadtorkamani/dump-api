@@ -1,11 +1,13 @@
 import { model, Schema } from 'mongoose'
 import * as bcrypt from 'bcrypt'
+import { uuid } from '../utilities'
 
 export interface IUser {
   email: string
   password: string
   createdAt: number
   updatedAt: number
+  confirmEmailToken: string
   hasConfirmedEmail: boolean
 }
 
@@ -15,6 +17,7 @@ const userSchema = new Schema<IUser>({
   createdAt: { type: Number, default: Date.now },
   updatedAt: { type: Number, default: Date.now },
   hasConfirmedEmail: { type: Boolean, default: false },
+  confirmEmailToken: { type: String, default: () => uuid() },
 })
 
 userSchema.pre('save', async function hashPassword() {
