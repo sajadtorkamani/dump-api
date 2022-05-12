@@ -11,7 +11,7 @@ export interface IUser {
   hasConfirmedEmail: boolean
 }
 
-const userSchema = new Schema<IUser>({
+const UserSchema = new Schema<IUser>({
   email: { type: String, required: true },
   password: { type: String, required: true },
   createdAt: { type: Number, default: Date.now },
@@ -20,10 +20,18 @@ const userSchema = new Schema<IUser>({
   confirmEmailToken: { type: String, default: () => uuid() },
 })
 
-userSchema.pre('save', async function hashPassword() {
+UserSchema.pre('save', async function hashPassword() {
   this.password = await bcrypt.hash(this.password, 10)
 })
 
-const User = model<IUser>('User', userSchema)
+UserSchema.methods.toJSON = function () {
+  const json = this.toObject()
+  delete json.password
+  delete json.confirmEmailToken
+
+  return json
+}
+
+const User = model<IUser>('User', UserSchema)
 
 export default User

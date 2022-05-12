@@ -24,7 +24,7 @@ const execute: RequestHandler = async (req, res) => {
   const user = await userService.createUser(req.body)
   await userService.sendConfirmEmailInstructions(user)
 
-  res.status(StatusCodes.CREATED).json(user)
+  res.status(StatusCodes.CREATED).json(user.toJSON())
 }
 
 export const register = makeAsync([validate, execute])
