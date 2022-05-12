@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import * as yup from 'yup'
+import jwtService from '../../services/jwtService'
 import userService from '../../services/userService'
 import { RegisterRequest } from '../../types/requests'
 import { makeAsync, validateOrFail } from '../../utilities'
@@ -24,7 +25,10 @@ const execute: RequestHandler = async (req, res) => {
   const user = await userService.createUser(req.body)
   await userService.sendConfirmEmailInstructions(user)
 
-  res.status(StatusCodes.CREATED).json(user.toJSON())
+  res.status(StatusCodes.CREATED).json({
+    token: await jwtService.generateToken(user),
+    user: user.toJSON()
+  })
 }
 
 export const register = makeAsync([validate, execute])

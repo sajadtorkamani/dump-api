@@ -7,7 +7,7 @@ import { ensureEnvVarsAreSet } from './utilities'
 async function main() {
   ensureEnvVarsAreSet()
 
-  await mongoose.connect(process.env.MONGO_URI as string)
+  await mongoose.connect(process.env.MONGO_URI)
 
   mailerService.createQueueWorker()
   

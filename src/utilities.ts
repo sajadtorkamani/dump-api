@@ -46,6 +46,7 @@ export function ensureEnvVarsAreSet() {
     'MONGO_URI',
     'REDIS_HOST',
     'REDIS_PORT',
+    'SECRET_KEY',
     'SMTP_USERNAME',
     'SMTP_PASSWORD',
   ]
