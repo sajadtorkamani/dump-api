@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import bootstrap from '../src/bootstrap'
 import User from '../src/models/User'
 
 declare global {
@@ -6,7 +6,7 @@ declare global {
 }
 
 async function main() {
-  await mongoose.connect(process.env.MONGO_URI)
+  await bootstrap()
 
   globalThis.models = {
     User: User,
