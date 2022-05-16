@@ -9,7 +9,7 @@ class JwtService {
         _id: user._id,
         email: user.email,
       },
-      process.env.SECRET_KEY
+      process.env.SECRET_KEY as string
     )
   }
 }

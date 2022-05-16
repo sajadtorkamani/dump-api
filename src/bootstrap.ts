@@ -3,7 +3,7 @@ import mailerService from './services/mailerService'
 
 async function bootstrap() {
   ensureEnvVarsAreSet()
-  await mongoose.connect(process.env.MONGO_URI)
+  await mongoose.connect(process.env.MONGO_URI as string)
   mailerService.createQueueWorker()
 }
 
@@ -11,6 +11,7 @@ function ensureEnvVarsAreSet() {
   const requiredKeys = [
     'ADMIN_EMAIL',
     'DOMAIN',
+    'FRONTEND_URL',
     'MONGO_URI',
     'REDIS_HOST',
     'REDIS_PORT',

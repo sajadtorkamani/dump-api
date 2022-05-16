@@ -3,4 +3,8 @@ export interface RegisterRequest {
   password: string
 }
 
-export interface LoginRequest extends RegisterRequest {}
+export type LoginRequest = RegisterRequest
+
+export interface UpdateDumpRequest {
+  content?: string
+}
